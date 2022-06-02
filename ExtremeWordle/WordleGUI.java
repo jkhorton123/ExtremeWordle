@@ -15,26 +15,47 @@ class gui {
 
        // Choosese a random word from the 2019 Collins Scrabble Words List
        String currentDir = System.getProperty("user.dir");
-       currentDir += "/Collins_Scrabble_Words_(2019).txt";
-       File wordFile = new File(currentDir);
+       String collinsPath = currentDir + "/Collins_Scrabble_Words_(2019).txt";
+       File collinsFile = new File(collinsPath);
+       // List of most common English Words produced by Peter Norvig and obtained from norvig.com
+       String commonWordsPath = currentDir + "/google-books-common-words.txt";
+       File commonWordsFile = new File(commonWordsPath);
        String wordleWord = "";
        int count5 = 12972; // 12972 total 5-letter words in the words .txt file
        String validWords[] = new String[count5];
        //Read the .txt file of words
        try {
-            BufferedReader br = new BufferedReader(new FileReader(wordFile));
+            BufferedReader collinsBR = new BufferedReader(new FileReader(collinsFile));
+            BufferedReader commonWordsBR = new BufferedReader(new FileReader(commonWordsFile));
             String str = "";
             int randNum = ThreadLocalRandom.current().nextInt(0, count5-1);
             int arrCount = 0;
+            count5 = 0;
             try {
-                while ((str = br.readLine()) != null) {
+                
+                while ((str = collinsBR.readLine()) != null) {
                     if(str.replaceAll("\\s+","").length() == 5) {
                         validWords[arrCount] = str.replaceAll("\\s+","");
                         arrCount += 1;
                     }                  
                 }
-                wordleWord = validWords[randNum];
-                br.close();
+                while ((str = commonWordsBR.readLine()) != null) {
+                    char let = str.charAt(4);
+                    char space = str.charAt(5);
+                    // Checks that the word is 5 letters
+                    if ((let >= 'a' && let <= 'z') || (let >= 'A' && let <= 'Z') && Character.isWhitespace(space)) { 
+                        String candidateWord = str.substring(0,5);
+                        if (Arrays.asList(validWords).contains(candidateWord)) {
+                            System.out.println(candidateWord.toLowerCase());
+                        }
+                    
+                    }
+
+                }
+                str = commonWordsBR.readLine();
+                System.out.println(str);
+                commonWordsBR.close();
+                collinsBR.close();
             }
             catch(IOException i) {
                 System.out.print(i);
