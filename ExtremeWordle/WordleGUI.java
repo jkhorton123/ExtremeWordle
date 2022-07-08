@@ -21,22 +21,24 @@ class gui {
        String commonWordsPath = currentDir + "/google-books-common-words.txt";
        File commonWordsFile = new File(commonWordsPath);
        String wordleWord = "";
-       int count5 = 12972; // 12972 total 5-letter words in the words .txt file
-       String validWords[] = new String[count5];
+       int count5 = 12972; // 12972 total 5-letter words in the scrabble words .txt file
+       int commonCount5 = 5522; // total 5-letter words in the google books common words .txt file that are also in the scrabble words .txt file
+       String validWords[] = new String[count5]; //All valid 5-letter words
        //Read the .txt file of words
        try {
             BufferedReader collinsBR = new BufferedReader(new FileReader(collinsFile));
             BufferedReader commonWordsBR = new BufferedReader(new FileReader(commonWordsFile));
             String str = "";
-            int randNum = ThreadLocalRandom.current().nextInt(0, count5-1);
-            int arrCount = 0;
-            count5 = 0;
+            int randNum = ThreadLocalRandom.current().nextInt(0, commonCount5-1);
+            int vArrCount = 0;
+            int cWordCount = 0;
+            
             try {
                 
                 while ((str = collinsBR.readLine()) != null) {
                     if(str.replaceAll("\\s+","").length() == 5) {
-                        validWords[arrCount] = str.replaceAll("\\s+","");
-                        arrCount += 1;
+                        validWords[vArrCount] = str.replaceAll("\\s+","");
+                        vArrCount += 1;
                     }                  
                 }
                 while ((str = commonWordsBR.readLine()) != null) {
@@ -46,14 +48,15 @@ class gui {
                     if ((let >= 'a' && let <= 'z') || (let >= 'A' && let <= 'Z') && Character.isWhitespace(space)) { 
                         String candidateWord = str.substring(0,5);
                         if (Arrays.asList(validWords).contains(candidateWord)) {
-                            System.out.println(candidateWord.toLowerCase());
+                            if (cWordCount == randNum) {
+                                wordleWord = candidateWord.toLowerCase();
+                            }
+                            cWordCount += 1;
                         }
                     
                     }
 
                 }
-                str = commonWordsBR.readLine();
-                System.out.println(str);
                 commonWordsBR.close();
                 collinsBR.close();
             }
@@ -97,7 +100,8 @@ class enteredWord {
                     retList[i] = ANSI_GREEN_BACKGROUND+guessLet+ANSI_RESET;
                     matches += 1;
                 }
-                else if (word.contains(guessLet.toUpperCase())) {
+                
+                else if (word.contains(guessLet)) {
                     retList[i] = ANSI_YELLOW_BACKGROUND+guessLet+ANSI_RESET;
                 }
                 else {
