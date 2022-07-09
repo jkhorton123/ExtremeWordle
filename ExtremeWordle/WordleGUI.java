@@ -3,7 +3,6 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
 import java.util.Arrays;
-
 class gui {
     public static void main(String args[]){
        JFrame frame = new JFrame("My First GUI");
@@ -12,7 +11,10 @@ class gui {
        JButton button = new JButton("Press");
        frame.getContentPane().add(button); // Adds Button to content pane of frame
        frame.setVisible(true);
-
+       
+       //Ask the user to choose a difficulty level
+       int difficulty = new gui().getDifficulty();
+       System.out.println(difficulty);
        // Choosese a random word from the 2019 Collins Scrabble Words List
        String currentDir = System.getProperty("user.dir");
        String collinsPath = currentDir + "/Collins_Scrabble_Words_(2019).txt";
@@ -73,7 +75,32 @@ class gui {
        System.exit(0);
 
     }
+    public int getDifficulty() {
+       System.out.println("1 - Easy");
+       System.out.println("2 - Medium");
+       System.out.println("3 - Hard");
+       System.out.println("4 - Very Hard");
+       System.out.println("5 - Extreme");
+       System.out.println("Select the Difficulty Mode by inputting its respective number:");
+       Scanner difficultyScan = new Scanner(System.in);
+       boolean validDifficulty = false;
+       while (!validDifficulty) {
+            String difficultyStr = difficultyScan.nextLine().replaceAll("\\s+","");
+            if (difficultyStr.matches("[0-5]+")) {
+                int difficultyNum = Integer.parseInt(difficultyStr);
+                validDifficulty = true;
+                return difficultyNum;
+            }
+            else {
+                System.out.println("Please enter a difficulty level between 1 and 5");
+            }
+        }
+        return 1;
+
+
+    }
 }
+
 
 class enteredWord {
     public String guess;
