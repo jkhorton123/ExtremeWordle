@@ -3,15 +3,79 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
 import java.util.Arrays;
+import java.awt.*;
+import java.awt.event.*;
 class gui {
     public static void main(String args[]){
-       JFrame frame = new JFrame("My First GUI");
-       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       frame.setSize(300,300);
-       JButton button = new JButton("Press");
-       frame.getContentPane().add(button); // Adds Button to content pane of frame
+        //JFrame Setup
+        JFrame frame = new JFrame("My First GUI");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        int frameWidth = 500;
+        int frameHeight = 300;
+
+        //Adding Welcome and Instruction Labels
+        Label welcomeL = new Label("Welcome to Extreme Wordle!");
+        Label instructionL = new Label("Please select the difficulty level from the options below:");
+        int welcomeLWidth = 200;
+        int instructionLWidth = 400;
+        welcomeL.setBounds((frameWidth-welcomeLWidth)/2, 10, welcomeLWidth, 50);
+        instructionL.setBounds((frameWidth-instructionLWidth)/2, 40, instructionLWidth, 50);
+        frame.add(welcomeL);
+        frame.add(instructionL);
+
+        //Adding Difficulty Buttons
+        int buttonWidth = 150;
+        int buttonHeight = 30;
+        int buttonSpacing = 30;
+        int diffVertStart = 70;
+
+        JButton easyB = new JButton("Easy");
+        JButton mediumB = new JButton("Medium");
+        JButton hardB = new JButton("Hard");
+        JButton vHardB = new JButton("Very Hard");
+        JButton extremeB = new JButton("Extreme");
+
+        easyB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing, buttonWidth, buttonHeight);
+        mediumB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*2, buttonWidth, buttonHeight);
+        hardB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*3, buttonWidth, buttonHeight);
+        vHardB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*4, buttonWidth, buttonHeight);
+        extremeB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*5, buttonWidth, buttonHeight);
+
+        easyB.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Easy pressed");
+            }
+        });
+        mediumB.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Medium pressed");
+            }
+        });
+        hardB.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Hard pressed");
+            }
+        });
+        vHardB.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Very Hard pressed");
+            }
+        });
+        extremeB.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Extreme pressed");
+            }
+        });
+       frame.add(easyB); 
+       frame.add(mediumB); 
+       frame.add(hardB); 
+       frame.add(vHardB); 
+       frame.add(extremeB); 
+
+       frame.setSize(frameWidth, frameHeight);
+       frame.setLayout(null);
        frame.setVisible(true);
-       
+       /*
        //Ask the user to choose a difficulty level
        int difficulty = new gui().getDifficulty();
        System.out.println(difficulty);
@@ -88,17 +152,23 @@ class gui {
             String difficultyStr = difficultyScan.nextLine().replaceAll("\\s+","");
             if (difficultyStr.matches("[0-5]+")) {
                 int difficultyNum = Integer.parseInt(difficultyStr);
-                validDifficulty = true;
-                return difficultyNum;
+                if (difficultyNum > 0 && difficultyNum < 6) {
+                    validDifficulty = true;
+                    return difficultyNum;
+                }
+                else { 
+                    System.out.println("Please enter a difficulty level between 1 and 5");
+                }
             }
             else {
                 System.out.println("Please enter a difficulty level between 1 and 5");
             }
         }
         return 1;
-
+        */
 
     }
+
 }
 
 
