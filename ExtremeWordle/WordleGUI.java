@@ -3,12 +3,13 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;
 class gui {
     public static void main(String args[]){
         //JFrame Setup
-        JFrame frame = new JFrame("My First GUI");
+        JFrame frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         int frameWidth = 500;
         int frameHeight = 300;
@@ -34,6 +35,7 @@ class gui {
         JButton hardB = new JButton("Hard");
         JButton vHardB = new JButton("Very Hard");
         JButton extremeB = new JButton("Extreme");
+        
 
         easyB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing, buttonWidth, buttonHeight);
         mediumB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*2, buttonWidth, buttonHeight);
@@ -41,29 +43,37 @@ class gui {
         vHardB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*4, buttonWidth, buttonHeight);
         extremeB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*5, buttonWidth, buttonHeight);
 
+        final SystemWordChoice systemWordChoice = new SystemWordChoice();
+        HashMap<String, Integer> difficultyValues = new HashMap<String, Integer>(5);
+        difficultyValues.put("Easy", 1);
+        difficultyValues.put("Medium", 2);
+        difficultyValues.put("Hard", 3);
+        difficultyValues.put("Very Hard", 4);
+        difficultyValues.put("Extreme", 5);
+
         easyB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Easy pressed");
+                systemWordChoice.chooseWord(difficultyValues.get("Easy"));
             }
         });
         mediumB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Medium pressed");
+                systemWordChoice.chooseWord(difficultyValues.get("Medium"));
             }
         });
         hardB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Hard pressed");
+                systemWordChoice.chooseWord(difficultyValues.get("Hard"));
             }
         });
         vHardB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Very Hard pressed");
+                systemWordChoice.chooseWord(difficultyValues.get("Very Hard"));
             }
         });
         extremeB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Extreme pressed");
+                systemWordChoice.chooseWord(difficultyValues.get("Extreme"));
             }
         });
        frame.add(easyB); 
@@ -75,32 +85,45 @@ class gui {
        frame.setSize(frameWidth, frameHeight);
        frame.setLayout(null);
        frame.setVisible(true);
-       /*
-       //Ask the user to choose a difficulty level
-       int difficulty = new gui().getDifficulty();
-       System.out.println(difficulty);
-       // Choosese a random word from the 2019 Collins Scrabble Words List
-       String currentDir = System.getProperty("user.dir");
-       String collinsPath = currentDir + "/Collins_Scrabble_Words_(2019).txt";
-       File collinsFile = new File(collinsPath);
-       // List of most common English Words produced by Peter Norvig and obtained from norvig.com
-       String commonWordsPath = currentDir + "/google-books-common-words.txt";
-       File commonWordsFile = new File(commonWordsPath);
-       String wordleWord = "";
-       int count5 = 12972; // 12972 total 5-letter words in the scrabble words .txt file
-       int commonCount5 = 5522; // total 5-letter words in the google books common words .txt file that are also in the scrabble words .txt file
-       String validWords[] = new String[count5]; //All valid 5-letter words
-       //Read the .txt file of words
-       try {
+
+    }
+}
+
+class SystemWordChoice {
+    // Choose a random word from the 2019 Collins Scrabble Words List
+    String currentDir = System.getProperty("user.dir");
+    String collinsPath = currentDir + "/Collins_Scrabble_Words_(2019).txt";
+    File collinsFile = new File(collinsPath);
+    // List of most common English Words produced by Peter Norvig and obtained from norvig.com
+    String commonWordsPath = currentDir + "/google-books-common-words.txt";
+    File commonWordsFile = new File(commonWordsPath);
+
+    // Initialize variables for parsing and storing words
+    String wordleWord = "";
+    int count5 = 12972; // 12972 total 5-letter words in the scrabble words .txt file
+    int commonCount5 = 5522; // total 5-letter words in the google books common words .txt file that are also in the scrabble words .txt file
+    int wordsPerDiffLevel = 1104; // total 5-letter words considered for each difficulty level
+    String validWords[] = new String[count5]; //All valid 5-letter words
+    public void chooseWord(int difficultyVal) {
+        /*
+        Chooses the hidden word based on the difficulty level selected by the user
+        
+        Parameters: 
+            difficultyVal (Integer) : Value (1-5) corresponding to the selected difficulty 
+
+        Returns:
+            wordleWord (String) : Hidden word that the user will try to guess
+        */
+
+        try {
             BufferedReader collinsBR = new BufferedReader(new FileReader(collinsFile));
             BufferedReader commonWordsBR = new BufferedReader(new FileReader(commonWordsFile));
             String str = "";
-            int randNum = ThreadLocalRandom.current().nextInt(0, commonCount5-1);
+            int randNum = ThreadLocalRandom.current().nextInt(wordsPerDiffLevel*(difficultyVal-1), wordsPerDiffLevel*difficultyVal);
             int vArrCount = 0;
             int cWordCount = 0;
             
             try {
-                
                 while ((str = collinsBR.readLine()) != null) {
                     if(str.replaceAll("\\s+","").length() == 5) {
                         validWords[vArrCount] = str.replaceAll("\\s+","");
@@ -116,6 +139,7 @@ class gui {
                         if (Arrays.asList(validWords).contains(candidateWord)) {
                             if (cWordCount == randNum) {
                                 wordleWord = candidateWord.toLowerCase();
+                                break;
                             }
                             cWordCount += 1;
                         }
@@ -123,56 +147,27 @@ class gui {
                     }
 
                 }
+                System.out.println(randNum + wordleWord);
                 commonWordsBR.close();
                 collinsBR.close();
             }
             catch(IOException i) {
                 System.out.print(i);
             }
-       }
-       catch(FileNotFoundException e) {
-            System.out.print(e);
-       }
-       
-       enteredWord word = new enteredWord();
-       word.outputWord(wordleWord, validWords);
-       System.exit(0);
-
-    }
-    public int getDifficulty() {
-       System.out.println("1 - Easy");
-       System.out.println("2 - Medium");
-       System.out.println("3 - Hard");
-       System.out.println("4 - Very Hard");
-       System.out.println("5 - Extreme");
-       System.out.println("Select the Difficulty Mode by inputting its respective number:");
-       Scanner difficultyScan = new Scanner(System.in);
-       boolean validDifficulty = false;
-       while (!validDifficulty) {
-            String difficultyStr = difficultyScan.nextLine().replaceAll("\\s+","");
-            if (difficultyStr.matches("[0-5]+")) {
-                int difficultyNum = Integer.parseInt(difficultyStr);
-                if (difficultyNum > 0 && difficultyNum < 6) {
-                    validDifficulty = true;
-                    return difficultyNum;
-                }
-                else { 
-                    System.out.println("Please enter a difficulty level between 1 and 5");
-                }
-            }
-            else {
-                System.out.println("Please enter a difficulty level between 1 and 5");
-            }
         }
-        return 1;
-        */
+        catch(FileNotFoundException e) {
+            System.out.print(e);
+        }
+        //Look up how to create a new gui screen for selecting the word using JFrame
+        WordSelectionScreen wordSelectionScreen = new WordSelectionScreen();
+        wordSelectionScreen.outputWord(wordleWord, validWords);
+        System.exit(0);
 
     }
-
 }
 
 
-class enteredWord {
+class WordSelectionScreen {
     public String guess;
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
