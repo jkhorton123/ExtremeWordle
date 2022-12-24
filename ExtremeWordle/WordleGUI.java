@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;
 class gui {
+    public String word;
+    public String validWords[];
+    
     public static void createGui() { //JFrame Setup
         JFrame frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
