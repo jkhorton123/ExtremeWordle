@@ -92,7 +92,7 @@ public class WordSelectionService {
                     }
 
                 }
-                System.out.println(randNum + wordleWord);
+                // System.out.println(randNum + wordleWord);
                 commonWordsBR.close();
             }
             catch(IOException i) {

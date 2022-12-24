@@ -7,14 +7,13 @@ import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;
 class gui {
-    public String word;
-    public String validWords[];
-    
+    private String word;
+    private String validWords[];
+    private static final int frameWidth = 500;
+    private static final int frameHeight = 300;
     public static void createGui() { //JFrame Setup
         JFrame frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        int frameWidth = 500;
-        int frameHeight = 300;
         frame.setSize(frameWidth, frameHeight);
         frame.setLayout(null);
         frame.setVisible(true);
@@ -23,13 +22,11 @@ class gui {
         // JPanel wordSelectionPanel = createWordSelectionPanel();
         // frame.add(wordSelectionPanel);
         frame.setContentPane(difficultyPanel);
-        frame.repaint();
-        frame.revalidate();
+        // frame.repaint();
+        // frame.revalidate();
     }
 
     public static JPanel createDifficultyPanel() {
-        int frameWidth = 500;
-        int frameHeight = 300;
         JPanel difficultyPanel = new JPanel();
         difficultyPanel.setSize(frameWidth, frameHeight);
 
