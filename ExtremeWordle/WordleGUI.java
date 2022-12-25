@@ -6,58 +6,75 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
+
+import util.LimitDocumentFilter;
+
+import javax.swing.text.DocumentFilter;
 class gui {
     private String word;
     private String validWords[];
     private static final int frameWidth = 500;
     private static final int frameHeight = 300;
-    public static void createGui() { //JFrame Setup
-        JFrame frame = new JFrame("Extreme Wordle");
+    private static JFrame frame;
+    private static JPanel dPanel; // Panel containing the difficulty selection UI
+    private static JPanel wPanel; // Panel containing the word selection UI
+    public static void createGui() { // JFrame Setup
+        frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameWidth, frameHeight);
         frame.setLayout(null);
         frame.setVisible(true);
+        dPanel = new JPanel(new BorderLayout());
+        dPanel.setBorder(new EmptyBorder(2, 3, 2, 3));
+        JPanel dLayout = new JPanel(new GridBagLayout());
+        dLayout.setBorder(new EmptyBorder(5, 5, 5, 5));
         JPanel difficultyPanel = createDifficultyPanel();
-        frame.add(difficultyPanel);
-        // JPanel wordSelectionPanel = createWordSelectionPanel();
-        // frame.add(wordSelectionPanel);
-        frame.setContentPane(difficultyPanel);
+        dLayout.add(difficultyPanel);
+        dPanel.add(dLayout, BorderLayout.CENTER);
+        frame.add(dPanel);
+
+        wPanel = new JPanel(new BorderLayout());
+        dPanel.setBorder(new EmptyBorder(2, 3, 2, 3));
+        JPanel wLayout = new JPanel(new GridBagLayout());
+        wLayout.setBorder(new EmptyBorder(5, 5, 5, 5));
+        JPanel wordSelectionPanel = createWordSelectionPanel();
+        wLayout.add(wordSelectionPanel);
+        wPanel.add(wLayout, BorderLayout.CENTER);
+        frame.add(wPanel);
+        
+        frame.setContentPane(dPanel);
+        frame.setVisible(true);
         // frame.repaint();
         // frame.revalidate();
     }
 
     public static JPanel createDifficultyPanel() {
-        JPanel difficultyPanel = new JPanel();
+        /*
+        Creates the difficulty Selection screen UI
+
+        Returns:
+            difficultyPanel (JPanel) : Panel which contains the difficulty selection screen UI
+        */
+        JPanel difficultyPanel = new JPanel(new GridLayout(10, 1, 10, 5));
         difficultyPanel.setSize(frameWidth, frameHeight);
 
         //Adding Welcome and Instruction Labels
         Label welcomeL = new Label("Welcome to Extreme Wordle!");
         Label instructionL = new Label("Please select the difficulty level from the options below:");
-        int welcomeLWidth = 200;
-        int instructionLWidth = 400;
-        welcomeL.setBounds((frameWidth-welcomeLWidth)/2, 10, welcomeLWidth, 50);
-        instructionL.setBounds((frameWidth-instructionLWidth)/2, 40, instructionLWidth, 50);
+
         difficultyPanel.add(welcomeL);
         difficultyPanel.add(instructionL);
-
-        //Adding Difficulty Buttons
-        int buttonWidth = 150;
-        int buttonHeight = 30;
-        int buttonSpacing = 30;
-        int diffVertStart = 70;
 
         JButton easyB = new JButton("Easy");
         JButton mediumB = new JButton("Medium");
         JButton hardB = new JButton("Hard");
         JButton vHardB = new JButton("Very Hard");
         JButton extremeB = new JButton("Extreme");
-        
-
-        easyB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing, buttonWidth, buttonHeight);
-        mediumB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*2, buttonWidth, buttonHeight);
-        hardB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*3, buttonWidth, buttonHeight);
-        vHardB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*4, buttonWidth, buttonHeight);
-        extremeB.setBounds((frameWidth-buttonWidth)/2, diffVertStart + buttonSpacing*5, buttonWidth, buttonHeight);
 
         HashMap<String, Integer> difficultyValues = new HashMap<String, Integer>(5);
         difficultyValues.put("Easy", 1);
@@ -69,8 +86,11 @@ class gui {
         WordSelectionService wordSelectionService = new WordSelectionService();
         easyB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                wordSelectionService.chooseWord(difficultyValues.get("Easy"));
-                
+                String wordleWord = wordSelectionService.chooseWord(difficultyValues.get("Easy"));
+                frame.setContentPane(wPanel);
+                frame.setVisible(true);
+                frame.repaint();
+                frame.revalidate();
             }
         });
         mediumB.addActionListener(new ActionListener(){
@@ -100,11 +120,28 @@ class gui {
         difficultyPanel.add(extremeB); 
         return difficultyPanel;
     }
+    public static JPanel createWordSelectionPanel() {
+        /*
+        Creates the word selection screen UI
+        
+        Returns:
+            wordSelectionPanel (JPanel) : Panel which contains the word selection screen UI
+        */
+        JPanel wordSelectionPanel = new JPanel(new GridLayout(6, 5, 10, 2));
+        Label instructionL = new Label("Guess the Word");
+        wordSelectionPanel.add(instructionL);
+        wordSelectionPanel.setSize(frameWidth, frameHeight);
 
+        JTextField letField = new JTextField(1);
+        ((AbstractDocument)letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1));
+        wordSelectionPanel.add(letField);
+
+        return wordSelectionPanel;
+    }
     public static void main(String args[]){
         createGui();
     }
-        
+
 }
 
 

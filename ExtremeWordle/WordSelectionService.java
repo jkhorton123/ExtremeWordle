@@ -105,11 +105,12 @@ public class WordSelectionService {
         return wordleWord;
 
     }
-    // public void outputWord(String word, String validWords[]) {
-    //     /*
-    //     Prints the guess inputted by the user but highlights letters that match with the word with 
-    //     green and highlights letters that are in the wrong position with yellow
-    //     */
+    public void outputWord(String word, String validWords[]) {
+        /*
+        Prints the guess inputted by the user but highlights letters that match with the word with 
+        green and highlights letters that are in the wrong position with yellow
+        */
+        
     //     public String guess;
     //     public static final String ANSI_RESET = "\u001B[0m";
     //     public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
@@ -183,5 +184,5 @@ public class WordSelectionService {
 
     //     }
     //     guesses[guessCount-1] = guess.toLowerCase();
-    // }
+    }
 }
