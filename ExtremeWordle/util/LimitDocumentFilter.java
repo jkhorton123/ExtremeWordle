@@ -22,6 +22,7 @@ public class LimitDocumentFilter extends DocumentFilter {
         }
         Character c = text.toCharArray()[0];
         if (text.length() > 0 && Character.isAlphabetic(c)) {
+            text = text.toLowerCase();
             super.replace(fb, offset, length, text, attrs); 
         }
     }
