@@ -18,7 +18,6 @@ import util.LimitDocumentFilter;
 import javax.swing.text.DocumentFilter;
 class gui {
     private static String targetWord;
-    private static String[] validWords;
     private static ArrayList<String> guesses = new ArrayList<String>();
     private static final int frameWidth = 500;
     private static final int frameHeight = 300;
@@ -28,6 +27,7 @@ class gui {
     private static int firstActive = 0;
     private static int lastActive = 4;
     private static JTextField[] textFields;
+    private static WordSelectionService wordSelectionService;
     public static void createGui() { // JFrame Setup
         frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,7 +86,7 @@ class gui {
         difficultyValues.put("Very Hard", 4);
         difficultyValues.put("Extreme", 5);
 
-        WordSelectionService wordSelectionService = new WordSelectionService();
+        wordSelectionService = new WordSelectionService();
         easyB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyValues.get("Easy"));
@@ -169,7 +169,8 @@ class gui {
                         String let = textFields[i].getText();
                         guess = guess + let; 
                     }
-                    if((guess.length()==5) && !(guesses.contains(guess))) { // If 5 letters were inputted, the word has not already been guessed, and (add check for) it is a valid word
+
+                    if((guess.length()==5) && !(guesses.contains(guess)) && wordSelectionService.validateWord(guess)) { // If 5 letters were inputted, the word has not already been guessed, and it is a valid word
                         System.out.println(guess);
                         for(int i=firstActive; i<=lastActive; i++) {
                             textFields[i].setEnabled(false);
@@ -182,8 +183,9 @@ class gui {
                             }
                         }
                         guesses.add(guess);
-                        
-
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(frame, "Invlaid Word");
                     }
                 }
               });
