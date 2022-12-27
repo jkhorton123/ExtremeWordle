@@ -23,6 +23,9 @@ class gui {
     private static JFrame frame;
     private static JPanel dPanel; // Panel containing the difficulty selection UI
     private static JPanel wPanel; // Panel containing the word selection UI
+    private static int firstActive = 0;
+    private static int lastActive = 4;
+    private static JTextField[] textFields;
     public static void createGui() { // JFrame Setup
         frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -128,15 +131,57 @@ class gui {
             wordSelectionPanel (JPanel) : Panel which contains the word selection screen UI
         */
         JPanel wordSelectionPanel = new JPanel(new GridLayout(6, 5, 10, 2));
-        Label instructionL = new Label("Guess the Word");
-        wordSelectionPanel.add(instructionL);
+        // Label instructionL = new Label("Guess the Word");
+        // wordSelectionPanel.add(instructionL);
         wordSelectionPanel.setSize(frameWidth, frameHeight);
+        textFields = new JTextField[30];
+        String[] enteredChars = new String[30];
+        for(int i=0; i<30; i++) {
+            JTextField letField = new JTextField(1);
+            //Set names of text fields to the number and then access the local char array by accessing ?? Think more about how to 
+            // access specific spots in the arrays from the actionListener. Draw out the architecture. Should you make the variables global and reset them
+            // every time you call the panel?
+            ((AbstractDocument)letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1));
+            if(i>lastActive) {
+                letField.setEnabled(false);
+            }
+            letField.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                    // enteredChars[i]=letField.getText();
+                    boolean rowComplete = true;
+                    String guess = "";
+                    for(int i=firstActive; i<=lastActive; i++) {
+                        String let = textFields[i].getText();
+                        if(let.equals("")) {
+                            rowComplete = false;
+                            break;
+                        }
+                        else {
+                            guess = guess + let; 
+                        }
+                    }
+                    if(rowComplete) {
+                        for(int i=firstActive; i<=lastActive; i++) {
+                            textFields[i].setEnabled(false);
+                        }
+                        firstActive += 5;
+                        lastActive += 5;
+                        if(lastActive<=29) {
+                            for(int i=firstActive; i<=lastActive; i++) {
+                                textFields[i].setEnabled(true);
+                            }
+                        }
+                        System.out.println(guess);
+                        
 
-        JTextField letField = new JTextField(1);
-        ((AbstractDocument)letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1));
-        wordSelectionPanel.add(letField);
-
+                    }
+                }
+              });
+            wordSelectionPanel.add(letField);
+            textFields[i] = letField;
+        }
         return wordSelectionPanel;
+        
     }
     public static void main(String args[]){
         createGui();
