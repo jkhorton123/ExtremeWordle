@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;
 public class WordSelectionService {
-    public String[] getValidWords(int difficultyVal) {
+    String[] validWords;
+    public void getValidWords(int difficultyVal) {
         /*
         Collects all valid 5-letter words based on the difficulty level selected by the user
         
@@ -24,7 +25,7 @@ public class WordSelectionService {
 
         // Initialize variables for storing valid words
         int count5 = 12972; // 12972 total 5-letter words in the scrabble words .txt file
-        String validWords[] = new String[count5]; //All valid 5-letter words
+        String allValidWords[] = new String[count5]; //All valid 5-letter words
         try {
             BufferedReader collinsBR = new BufferedReader(new FileReader(collinsFile));
             String str = "";
@@ -32,7 +33,7 @@ public class WordSelectionService {
             try {
                 while ((str = collinsBR.readLine()) != null) {
                     if(str.replaceAll("\\s+","").length() == 5) {
-                        validWords[vArrCount] = str.replaceAll("\\s+","");
+                        allValidWords[vArrCount] = str.replaceAll("\\s+","");
                         vArrCount += 1;
                     }                  
                 }
@@ -44,7 +45,7 @@ public class WordSelectionService {
         catch(FileNotFoundException e) {
             System.out.print(e);
         }
-        return validWords;
+        validWords = allValidWords;
     }
 
     public String chooseWord(int difficultyVal) {
@@ -67,7 +68,7 @@ public class WordSelectionService {
         String wordleWord = "";
         int commonCount5 = 5522; // total 5-letter words in the google books common words .txt file that are also in the scrabble words .txt file
         int wordsPerDiffLevel = 1104; // total 5-letter words considered for each difficulty level
-        String[] validWords = getValidWords(difficultyVal); // List of valid 5-letter scrabble words
+        getValidWords(difficultyVal); // Gets list of valid 5-letter scrabble words
         try {
             BufferedReader commonWordsBR = new BufferedReader(new FileReader(commonWordsFile));
             String str = "";
@@ -152,37 +153,12 @@ public class WordSelectionService {
     //         System.out.println("Game Over, the correct word was " + word.toLowerCase());
     //     }
     //     wordScan.close();
-    // }
+    }
 
-    // public void getWord(String validWords[], String guesses[], int guessCount) {
-    //     /*
-    //     Obtains the guess from the user and verifies that it is a valid 5-letter word
-    //     */
-    //     boolean validWord = false;
-    //     while (!validWord) {
-    //         validWord = true;
-    //         System.out.print("Guesses remaining: ");
-    //         System.out.print(7-guessCount);
-    //         System.out.println("\nEnter your 5-letter word guess: ");
-    //         guess = wordScan.nextLine().replaceAll("\\s+","");
-    //         if (!(guess.matches("[a-zA-Z]+"))) {
-    //             validWord = false;
-    //             System.out.println("The entered word contains non-alphabetical characters");
-    //         }
-    //         else if (guess.length() != 5) {
-    //             validWord = false;
-    //             System.out.println("The entered word is not 5 letters");
-    //         }
-    //         else if (Arrays.asList(guesses).contains(guess.toLowerCase())) {
-    //             validWord = false;
-    //             System.out.println("The entered word has already been guessed");
-    //         }
-    //         else if (!Arrays.asList(validWords).contains(guess.toUpperCase())) {
-    //             validWord = false;
-    //             System.out.println("The entered word is not valid");
-    //         }
-
-    //     }
-    //     guesses[guessCount-1] = guess.toLowerCase();
+    public boolean validateWord(String guess) {
+        /*
+        Verifies that the guess is a valid word (using the Scrabble dictionary)
+        */
+        return Arrays.asList(validWords).contains(guess.toUpperCase());
     }
 }
