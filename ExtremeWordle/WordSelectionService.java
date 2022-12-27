@@ -93,7 +93,7 @@ public class WordSelectionService {
                     }
 
                 }
-                // System.out.println(randNum + wordleWord);
+                System.out.println(randNum);
                 commonWordsBR.close();
             }
             catch(IOException i) {
@@ -106,53 +106,38 @@ public class WordSelectionService {
         return wordleWord;
 
     }
-    public void outputWord(String word, String validWords[]) {
+    public Color[] getLetterColors(String guess, String targetWord) {
         /*
-        Prints the guess inputted by the user but highlights letters that match with the word with 
-        green and highlights letters that are in the wrong position with yellow
+        Returns an array containing the order of the colors corresponding to the validity and positioning of the letters in the guessed word relative to the target word
+        White indicates the letter is not contained in the target word
+        Yellow indicates the letter is found in the target word but is not in the correct position
+        Green indicates the letter is found in the target word and is in the correct position
+        
+        Parameters: 
+            guess (String) : User-inputted guess
+            targetWord (String) : Random word that the user is trying to guess
+
+        Returns:
+            letterColors (Color[]) : Array containing the color indicators for the letters in the guessed word
         */
-        
-    //     public String guess;
-    //     public static final String ANSI_RESET = "\u001B[0m";
-    //     public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
-    //     public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    //     public Scanner wordScan = new Scanner(System.in);
-    //     String retList[] = new String[5];
-    //     String guesses[] = new String[6];
-    //     int guessCount = 1;
-    //     while (guessCount <= 6) {
-    //         this.getWord(validWords, guesses, guessCount);
-    //         int matches = 0;
-    //         for (int i = 0; i<5; i++) {
-    //             String guessLet = Character.toString(guess.charAt(i)).toLowerCase();
-    //             String wordLet = Character.toString(word.charAt(i)).toLowerCase();
-    //             if (guessLet.equals(wordLet)) {
-    //                 retList[i] = ANSI_GREEN_BACKGROUND+guessLet+ANSI_RESET;
-    //                 matches += 1;
-    //             }
+
+            Color[] letterColors = new Color[5];
+            for (int i = 0; i<5; i++) {
+                String guessLet = Character.toString(guess.charAt(i));
+                String targetWordLet = Character.toString(targetWord.charAt(i));
+                if (guessLet.equals(targetWordLet)) {
+                    letterColors[i] = Color.GREEN;
+                }
                 
-    //             else if (word.contains(guessLet)) {
-    //                 retList[i] = ANSI_YELLOW_BACKGROUND+guessLet+ANSI_RESET;
-    //             }
-    //             else {
-    //                 retList[i] = guessLet;
-    //             }
-    //         }
-        
-    //         for (int i = 0; i<5; i++) {
-    //             System.out.print(retList[i]);
-    //         }
-    //         System.out.println("");
-    //         guessCount+=1;
-    //         if (matches == 5){
-    //             System.out.println("You guessed the word correctly!");
-    //             guessCount = 8;
-    //         }
-    //     }
-    //     if (guessCount == 7) {
-    //         System.out.println("Game Over, the correct word was " + word.toLowerCase());
-    //     }
-    //     wordScan.close();
+                else if (targetWord.contains(guessLet)) {
+                    letterColors[i] = Color.YELLOW;
+                }
+                else {
+                    letterColors[i] = Color.WHITE;
+                }
+            }
+            return letterColors;
+
     }
 
     public boolean validateWord(String guess) {

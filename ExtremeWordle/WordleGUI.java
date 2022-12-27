@@ -98,22 +98,38 @@ class gui {
         });
         mediumB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                wordSelectionService.chooseWord(difficultyValues.get("Medium"));
+                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Medium"));
+                frame.setContentPane(wPanel);
+                frame.setVisible(true);
+                frame.repaint();
+                frame.revalidate();
             }
         });
         hardB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                wordSelectionService.chooseWord(difficultyValues.get("Hard"));
+                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Hard"));
+                frame.setContentPane(wPanel);
+                frame.setVisible(true);
+                frame.repaint();
+                frame.revalidate();
             }
         });
         vHardB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                wordSelectionService.chooseWord(difficultyValues.get("Very Hard"));
+                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Very Hard"));
+                frame.setContentPane(wPanel);
+                frame.setVisible(true);
+                frame.repaint();
+                frame.revalidate();
             }
         });
         extremeB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                wordSelectionService.chooseWord(difficultyValues.get("Extreme"));
+                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Extreme"));
+                frame.setContentPane(wPanel);
+                frame.setVisible(true);
+                frame.repaint();
+                frame.revalidate();
             }
         });
         difficultyPanel.add(easyB); 
@@ -171,21 +187,32 @@ class gui {
                     }
 
                     if((guess.length()==5) && !(guesses.contains(guess)) && wordSelectionService.validateWord(guess)) { // If 5 letters were inputted, the word has not already been guessed, and it is a valid word
-                        System.out.println(guess);
+                        guesses.add(guess);
+                        Color[] letterColors = wordSelectionService.getLetterColors(guess, targetWord);
+                        int c = 0;
                         for(int i=firstActive; i<=lastActive; i++) {
+                            textFields[i].setBackground(letterColors[c]);
                             textFields[i].setEnabled(false);
+                            c += 1;
                         }
-                        firstActive += 5;
-                        lastActive += 5;
-                        if(lastActive<=29) {
-                            for(int i=firstActive; i<=lastActive; i++) {
-                                textFields[i].setEnabled(true);
+                        if(guess.equals(targetWord)) {
+                            JOptionPane.showMessageDialog(frame, "You won!");
+                        }
+                        else if(guesses.size() == 6) { 
+                            JOptionPane.showMessageDialog(frame, "Game Over. The word was " + targetWord);
+                        }
+                        else { 
+                            firstActive += 5;
+                            lastActive += 5;
+                            if(lastActive<=29) {
+                                for(int i=firstActive; i<=lastActive; i++) {
+                                    textFields[i].setEnabled(true);
+                                }
                             }
                         }
-                        guesses.add(guess);
                     }
                     else {
-                        JOptionPane.showMessageDialog(frame, "Invlaid Word");
+                        JOptionPane.showMessageDialog(frame, "Invalid Word");
                     }
                 }
               });
