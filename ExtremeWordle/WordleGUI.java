@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.awt.*;
@@ -16,8 +17,9 @@ import util.LimitDocumentFilter;
 
 import javax.swing.text.DocumentFilter;
 class gui {
-    private String word;
-    private String validWords[];
+    private static String targetWord;
+    private static String[] validWords;
+    private static ArrayList<String> guesses = new ArrayList<String>();
     private static final int frameWidth = 500;
     private static final int frameHeight = 300;
     private static JFrame frame;
@@ -52,8 +54,6 @@ class gui {
         
         frame.setContentPane(dPanel);
         frame.setVisible(true);
-        // frame.repaint();
-        // frame.revalidate();
     }
 
     public static JPanel createDifficultyPanel() {
@@ -89,7 +89,7 @@ class gui {
         WordSelectionService wordSelectionService = new WordSelectionService();
         easyB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                String wordleWord = wordSelectionService.chooseWord(difficultyValues.get("Easy"));
+                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Easy"));
                 frame.setContentPane(wPanel);
                 frame.setVisible(true);
                 frame.repaint();
@@ -130,37 +130,47 @@ class gui {
         Returns:
             wordSelectionPanel (JPanel) : Panel which contains the word selection screen UI
         */
-        JPanel wordSelectionPanel = new JPanel(new GridLayout(6, 5, 10, 2));
-        // Label instructionL = new Label("Guess the Word");
-        // wordSelectionPanel.add(instructionL);
+        JPanel wordSelectionPanel = new JPanel(); // Outer panel which will encompass the back button and the inputFieldsPanel
         wordSelectionPanel.setSize(frameWidth, frameHeight);
+        
+        JButton backB = new JButton("Back");
+        backB.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                frame.setContentPane(dPanel);
+                frame.setVisible(true);
+                frame.repaint();
+                frame.revalidate();
+            }
+        });
+        GridBagConstraints gbc = new GridBagConstraints();            
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.insets = new Insets(16, 16, 16, 16);
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        wordSelectionPanel.add(backB, gbc);
+     
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.fill = gbc.BOTH;
+        gbc.insets = new Insets(24, 40, 40, 40);
+        JPanel inputFieldsPanel = new JPanel(new GridLayout(6, 5, 10, 2)); // Inner panel which will contain the text fields
         textFields = new JTextField[30];
-        String[] enteredChars = new String[30];
         for(int i=0; i<30; i++) {
             JTextField letField = new JTextField(1);
-            //Set names of text fields to the number and then access the local char array by accessing ?? Think more about how to 
-            // access specific spots in the arrays from the actionListener. Draw out the architecture. Should you make the variables global and reset them
-            // every time you call the panel?
             ((AbstractDocument)letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1));
             if(i>lastActive) {
                 letField.setEnabled(false);
             }
             letField.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(ActionEvent event) {
-                    // enteredChars[i]=letField.getText();
-                    boolean rowComplete = true;
                     String guess = "";
                     for(int i=firstActive; i<=lastActive; i++) {
                         String let = textFields[i].getText();
-                        if(let.equals("")) {
-                            rowComplete = false;
-                            break;
-                        }
-                        else {
-                            guess = guess + let; 
-                        }
+                        guess = guess + let; 
                     }
-                    if(rowComplete) {
+                    if((guess.length()==5) && !(guesses.contains(guess))) { // If 5 letters were inputted, the word has not already been guessed, and (add check for) it is a valid word
+                        System.out.println(guess);
                         for(int i=firstActive; i<=lastActive; i++) {
                             textFields[i].setEnabled(false);
                         }
@@ -171,15 +181,16 @@ class gui {
                                 textFields[i].setEnabled(true);
                             }
                         }
-                        System.out.println(guess);
+                        guesses.add(guess);
                         
 
                     }
                 }
               });
-            wordSelectionPanel.add(letField);
+            inputFieldsPanel.add(letField);
             textFields[i] = letField;
         }
+        wordSelectionPanel.add(inputFieldsPanel, gbc);
         return wordSelectionPanel;
         
     }
