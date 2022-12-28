@@ -20,8 +20,12 @@ public class LimitDocumentFilter extends DocumentFilter {
         if (overLimit > 0) {
             text = text.substring(0, text.length() - overLimit);
         }
+        if(text.equals("")) {
+            super.replace(fb, offset, length, text, attrs); 
+            return;
+        }
         Character c = text.toCharArray()[0];
-        if (text.length() > 0 && Character.isAlphabetic(c)) {
+        if (Character.isAlphabetic(c)) {
             text = text.toLowerCase();
             super.replace(fb, offset, length, text, attrs); 
         }

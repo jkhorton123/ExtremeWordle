@@ -28,6 +28,7 @@ class gui {
     private static int lastActive = 4;
     private static JTextField[] textFields;
     private static WordSelectionService wordSelectionService;
+    private static boolean textFieldsCreated = false;
     public static void createGui() { // JFrame Setup
         frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,6 +91,9 @@ class gui {
         easyB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyValues.get("Easy"));
+                if(textFieldsCreated){
+                    resetTextFields();
+                }
                 frame.setContentPane(wPanel);
                 frame.setVisible(true);
                 frame.repaint();
@@ -99,6 +103,9 @@ class gui {
         mediumB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyValues.get("Medium"));
+                if(textFieldsCreated){
+                    resetTextFields();
+                }
                 frame.setContentPane(wPanel);
                 frame.setVisible(true);
                 frame.repaint();
@@ -107,6 +114,9 @@ class gui {
         });
         hardB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
+                if(textFieldsCreated){
+                    resetTextFields();
+                }
                 targetWord = wordSelectionService.chooseWord(difficultyValues.get("Hard"));
                 frame.setContentPane(wPanel);
                 frame.setVisible(true);
@@ -117,6 +127,9 @@ class gui {
         vHardB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyValues.get("Very Hard"));
+                if(textFieldsCreated){
+                    resetTextFields();
+                }
                 frame.setContentPane(wPanel);
                 frame.setVisible(true);
                 frame.repaint();
@@ -126,6 +139,9 @@ class gui {
         extremeB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyValues.get("Extreme"));
+                if(textFieldsCreated){
+                    resetTextFields();
+                }
                 frame.setContentPane(wPanel);
                 frame.setVisible(true);
                 frame.repaint();
@@ -199,7 +215,7 @@ class gui {
                             JOptionPane.showMessageDialog(frame, "You won!");
                         }
                         else if(guesses.size() == 6) { 
-                            JOptionPane.showMessageDialog(frame, "Game Over. The word was " + targetWord);
+                            JOptionPane.showMessageDialog(frame, "Game Over. The word was " + targetWord + ".");
                         }
                         else { 
                             firstActive += 5;
@@ -219,8 +235,25 @@ class gui {
             inputFieldsPanel.add(letField);
             textFields[i] = letField;
         }
+        textFieldsCreated = true;
         wordSelectionPanel.add(inputFieldsPanel, gbc);
         return wordSelectionPanel;
+        
+    }
+    public static void resetTextFields() {
+        /*
+        Resets the text fields and associated variables for the word selection screen
+        */
+        firstActive = 0;
+        lastActive = 4;
+        guesses = new ArrayList<String>();
+        for(int i=0; i<30; i++) {
+            textFields[i].setText("");
+            textFields[i].setBackground(Color.WHITE);
+        }
+        for(int i=firstActive; i<lastActive+1;i++) {
+            textFields[i].setEnabled(true);
+        }
         
     }
     public static void main(String args[]){
