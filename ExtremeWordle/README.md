@@ -1,2 +1,5 @@
 # ExtremeWordle
-This is Extreme Wordle
+This is a [Wordle](https://www.nytimes.com/games/wordle/index.html) variant that has various difficulty levels and was built using Java 18.0.1 for the back-end and Java Swing for the front-end. Information regarding Wordle can be found [here](https://en.wikipedia.org/wiki/Wordle).
+
+The word chosen by the program (which the user will then try to guess) is a random five letter word which is selected from a list of English words sorted by the number of times they occur in a database of books. This list was imported as this [.txt file](https://norvig.com/google-books-common-words.txt). Each of the 5 difficulty levels chooses from 20% of the 5-letter words, with the most common 20% selected for easy mode and the rarest 20% selected for extreme mode.
+
