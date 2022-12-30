@@ -1,21 +1,12 @@
 import javax.swing.*;
-import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
-
 import util.LimitDocumentFilter;
 
-import javax.swing.text.DocumentFilter;
 class gui {
     private static String targetWord;
     private static ArrayList<String> guesses = new ArrayList<String>();
@@ -29,7 +20,10 @@ class gui {
     private static JTextField[] textFields;
     private static WordSelectionService wordSelectionService;
     private static boolean textFieldsCreated = false;
-    public static void createGui() { // JFrame Setup
+    public static void createGui() { 
+        /*
+        Creates the JFrame and calls methods to create the JPanels that will be used for the UI
+        */
         frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameWidth, frameHeight);
@@ -53,13 +47,13 @@ class gui {
         wPanel.add(wLayout, BorderLayout.CENTER);
         frame.add(wPanel);
         
-        frame.setContentPane(dPanel);
+        frame.setContentPane(dPanel); // The application will show the difficulty selection screen initially
         frame.setVisible(true);
     }
 
     public static JPanel createDifficultyPanel() {
         /*
-        Creates the difficulty Selection screen UI
+        Creates the difficulty selection screen UI
 
         Returns:
             difficultyPanel (JPanel) : Panel which contains the difficulty selection screen UI
@@ -67,19 +61,21 @@ class gui {
         JPanel difficultyPanel = new JPanel(new GridLayout(10, 1, 10, 5));
         difficultyPanel.setSize(frameWidth, frameHeight);
 
-        //Adding Welcome and Instruction Labels
+        // Adding Welcome and Instruction Labels
         Label welcomeL = new Label("Welcome to Extreme Wordle!");
         Label instructionL = new Label("Please select the difficulty level from the options below:");
 
         difficultyPanel.add(welcomeL);
         difficultyPanel.add(instructionL);
 
+        // Adding difficulty buttons
         JButton easyB = new JButton("Easy");
         JButton mediumB = new JButton("Medium");
         JButton hardB = new JButton("Hard");
         JButton vHardB = new JButton("Very Hard");
         JButton extremeB = new JButton("Extreme");
 
+        // Mapping the difficulty values to integer multipliers that will be used for selecting words from the word list sorted by frequency
         HashMap<String, Integer> difficultyValues = new HashMap<String, Integer>(5);
         difficultyValues.put("Easy", 1);
         difficultyValues.put("Medium", 2);
@@ -89,6 +85,7 @@ class gui {
 
         wordSelectionService = new WordSelectionService();
         easyB.addActionListener(new ActionListener(){
+            // The following methods obtain the target word based on the selected difficulty, reset the word selection screen, and switch the content pane to the word selection screen
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyValues.get("Easy"));
                 if(textFieldsCreated){
@@ -165,8 +162,10 @@ class gui {
         JPanel wordSelectionPanel = new JPanel(); // Outer panel which will encompass the back button and the inputFieldsPanel
         wordSelectionPanel.setSize(frameWidth, frameHeight);
         
+        // Adding the back button
         JButton backB = new JButton("Back");
         backB.addActionListener(new ActionListener(){
+            // Back button will switch to the difficulty selection screen
             public void actionPerformed(ActionEvent e) {
                 frame.setContentPane(dPanel);
                 frame.setVisible(true);
@@ -190,39 +189,41 @@ class gui {
         textFields = new JTextField[30];
         for(int i=0; i<30; i++) {
             JTextField letField = new JTextField(1);
-            ((AbstractDocument)letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1));
+            ((AbstractDocument)letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1)); // Sets the filter for text inputs
             if(i>lastActive) {
-                letField.setEnabled(false);
+                letField.setEnabled(false); // Disables all text fields that are below the current row
             }
             letField.addActionListener(new java.awt.event.ActionListener() {
+                // Triggered when the user selects enter in a text box, this method validates the entered word in the row and updates the UI accordingly
                 public void actionPerformed(ActionEvent event) {
                     String guess = "";
-                    for(int i=firstActive; i<=lastActive; i++) {
+                    for(int i=firstActive; i<=lastActive; i++) { // Builds the word from the five text fields in the row
                         String let = textFields[i].getText();
                         guess = guess + let; 
                     }
 
                     if((guess.length()==5) && !(guesses.contains(guess)) && wordSelectionService.validateWord(guess)) { // If 5 letters were inputted, the word has not already been guessed, and it is a valid word
                         guesses.add(guess);
-                        Color[] letterColors = wordSelectionService.getLetterColors(guess, targetWord);
+                        Color[] letterColors = wordSelectionService.getLetterColors(guess, targetWord); // Obtains color mappings for the letters in the selected word 
                         int c = 0;
                         for(int i=firstActive; i<=lastActive; i++) {
+                            // Sets the text fields to the respective color and disables the text fields in the finished row
                             textFields[i].setBackground(letterColors[c]);
                             textFields[i].setEnabled(false);
                             c += 1;
                         }
                         if(guess.equals(targetWord)) {
-                            JOptionPane.showMessageDialog(frame, "You won!");
+                            JOptionPane.showMessageDialog(frame, "You won!"); // Produced if the user enters the target word
                         }
                         else if(guesses.size() == 6) { 
-                            JOptionPane.showMessageDialog(frame, "Game Over. The word was " + targetWord + ".");
+                            JOptionPane.showMessageDialog(frame, "Game Over. The word was " + targetWord + "."); // Produced if the user has used all 6 guesses without guessing the target word
                         }
                         else { 
                             firstActive += 5;
                             lastActive += 5;
                             if(lastActive<=29) {
                                 for(int i=firstActive; i<=lastActive; i++) {
-                                    textFields[i].setEnabled(true);
+                                    textFields[i].setEnabled(true); // Enables the text fields in the next row down
                                 }
                             }
                         }
@@ -244,6 +245,9 @@ class gui {
         /*
         Resets the text fields and associated variables for the word selection screen
         */
+        for(int i=firstActive; i<lastActive+1;i++) { // Disables the currently editable row of text fields
+            textFields[i].setEnabled(false); 
+        }
         firstActive = 0;
         lastActive = 4;
         guesses = new ArrayList<String>();
@@ -251,10 +255,9 @@ class gui {
             textFields[i].setText("");
             textFields[i].setBackground(Color.WHITE);
         }
-        for(int i=firstActive; i<lastActive+1;i++) {
-            textFields[i].setEnabled(true);
+        for(int i=firstActive; i<lastActive+1;i++) { // Enables the first row of text fields
+            textFields[i].setEnabled(true); 
         }
-        
     }
     public static void main(String args[]){
         createGui();

@@ -1,31 +1,19 @@
-import javax.swing.*;
-import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.awt.*;
-import java.awt.event.*;
 public class WordSelectionService {
-    String[] validWords;
-    public void getValidWords(int difficultyVal) {
+    String[] validWords = new String[12972]; // Stores all 12,972 valid 5-letter words in the Scrabble text file
+    public void getValidWords() {
         /*
-        Collects all valid 5-letter words based on the difficulty level selected by the user
-        
-        Parameters: 
-            difficultyVal (Integer) : Value (1-5) corresponding to the selected difficulty 
-
-        Returns:
-            validWords (String[]) : List of words that the mystery word can be chosen from
+        Collects all valid 5-letter words from the 2019 Scrabble words list
         */
-        // Choose a random word from the 2019 Collins Scrabble Words List
+
+        // Loads in a file containing all valid scrabble words
         String currentDir = System.getProperty("user.dir");
         String collinsPath = currentDir + "/Collins_Scrabble_Words_(2019).txt";
         File collinsFile = new File(collinsPath);
 
-        // Initialize variables for storing valid words
-        int count5 = 12972; // 12972 total 5-letter words in the scrabble words .txt file
-        String allValidWords[] = new String[count5]; //All valid 5-letter words
         try {
             BufferedReader collinsBR = new BufferedReader(new FileReader(collinsFile));
             String str = "";
@@ -33,7 +21,7 @@ public class WordSelectionService {
             try {
                 while ((str = collinsBR.readLine()) != null) {
                     if(str.replaceAll("\\s+","").length() == 5) {
-                        allValidWords[vArrCount] = str.replaceAll("\\s+","");
+                        validWords[vArrCount] = str.replaceAll("\\s+",""); // Collects all valid 5-letter words from the Scrabble words file
                         vArrCount += 1;
                     }                  
                 }
@@ -45,34 +33,37 @@ public class WordSelectionService {
         catch(FileNotFoundException e) {
             System.out.print(e);
         }
-        validWords = allValidWords;
     }
 
     public String chooseWord(int difficultyVal) {
         /*
-        Chooses the hidden word based on the difficulty level selected by the user
+        Chooses the hidden word based on the difficulty level selected by the user. The word is selected from a .txt file containing 
+        English words sorted based on the number of times they occur in a large database of books. Each of the 5 difficulty levels chooses from 
+        20% of the books, with the most common 20% selected for easy mode and the rarest 20% selected for extreme mode.
         
         Parameters: 
-            difficultyVal (Integer) : Value (1-5) corresponding to the selected difficulty 
+            difficultyVal (Integer) : Value (1-5) corresponding to the selected difficulty
 
         Returns:
             wordleWord (String) : Hidden word that the user will try to guess
         */
         String currentDir = System.getProperty("user.dir");
 
-        // List of most common English Words produced by Peter Norvig and obtained from norvig.com
+        // Loads in common words .txt file containing English Words sorted by frequency which was obtained from norvig.com
         String commonWordsPath = currentDir + "/google-books-common-words.txt";
         File commonWordsFile = new File(commonWordsPath);
 
         // Initialize variables for parsing and storing words
         String wordleWord = "";
-        int commonCount5 = 5522; // total 5-letter words in the google books common words .txt file that are also in the scrabble words .txt file
+        int commonCount5 = 5522; // total 5-letter words in the google books common words .txt file that are also in the Scrabble words .txt file
         int wordsPerDiffLevel = 1104; // total 5-letter words considered for each difficulty level
-        getValidWords(difficultyVal); // Gets list of valid 5-letter scrabble words
+        if (validWords[0]==null) { // Only populates list of 5-letter Scrabble words if it has not already been populated
+            getValidWords(); // Gets list of valid 5-letter Scrabble words
+        }
         try {
             BufferedReader commonWordsBR = new BufferedReader(new FileReader(commonWordsFile));
             String str = "";
-            int randNum = ThreadLocalRandom.current().nextInt(wordsPerDiffLevel*(difficultyVal-1), wordsPerDiffLevel*difficultyVal);
+            int wordPos = ThreadLocalRandom.current().nextInt(wordsPerDiffLevel*(difficultyVal-1), wordsPerDiffLevel*difficultyVal); // Finds the position of the target word among all 5-letter words sorted based on frequency of use
             int cWordCount = 0;
             
             try {
@@ -82,9 +73,9 @@ public class WordSelectionService {
                     // Checks that the word is 5 letters
                     if ((let >= 'a' && let <= 'z') || (let >= 'A' && let <= 'Z') && Character.isWhitespace(space)) { 
                         String candidateWord = str.substring(0,5);
-                        if (Arrays.asList(validWords).contains(candidateWord)) {
-                            if (cWordCount == randNum) {
-                                wordleWord = candidateWord.toLowerCase();
+                        if (Arrays.asList(validWords).contains(candidateWord)) { // Verifies the word is valid based off the 2019 Scrabble word list
+                            if (cWordCount == wordPos) { // Checks if the word is at the correct position in the list of 5-letter words sorted based on frequency of use
+                                wordleWord = candidateWord.toLowerCase(); 
                                 break;
                             }
                             cWordCount += 1;
@@ -93,7 +84,6 @@ public class WordSelectionService {
                     }
 
                 }
-                System.out.println(randNum);
                 commonWordsBR.close();
             }
             catch(IOException i) {
@@ -108,10 +98,10 @@ public class WordSelectionService {
     }
     public Color[] getLetterColors(String guess, String targetWord) {
         /*
-        Returns an array containing the order of the colors corresponding to the validity and positioning of the letters in the guessed word relative to the target word
-        White indicates the letter is not contained in the target word
-        Yellow indicates the letter is found in the target word but is not in the correct position
-        Green indicates the letter is found in the target word and is in the correct position
+        Returns an array containing color indicators corresponding to the validity and positioning of the letters in the guessed word relative to the target word.
+        White indicates the letter is not contained in the target word.
+        Yellow indicates the letter is found in the target word but is not in the correct position.
+        Green indicates the letter is found in the target word and is in the correct position.
         
         Parameters: 
             guess (String) : User-inputted guess
@@ -142,7 +132,7 @@ public class WordSelectionService {
 
     public boolean validateWord(String guess) {
         /*
-        Verifies that the guess is a valid word (using the Scrabble dictionary)
+        Verifies that the guess is a valid word using the 2019 Scrabble word list
         */
         return Arrays.asList(validWords).contains(guess.toUpperCase());
     }
