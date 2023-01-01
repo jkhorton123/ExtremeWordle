@@ -1,6 +1,7 @@
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.awt.*;
 public class WordSelectionService {
     String[] validWords = new String[12972]; // Stores all 12,972 valid 5-letter words in the Scrabble text file
@@ -38,8 +39,14 @@ public class WordSelectionService {
     public String chooseWord(int difficultyVal) {
         /*
         Chooses the hidden word based on the difficulty level selected by the user. The word is selected from a .txt file containing 
-        English words sorted based on the number of times they occur in a large English corpus (see README). Each of the 5 difficulty levels chooses from 
-        20% of the words, with the most common 20% selected for easy mode and the rarest 20% selected for extreme mode.
+        English words sorted in descending order based on the number of times they occur in a large English corpus (see README). 
+        Each of the 5 difficulty levels chooses from a subset of the words. 
+        
+        Easy Mode: First 10% of the words in the list (the most common words in the list because the list is sorted by word commonness in descending order)
+        Medium Mode: Next 10% of words 
+        Hard Mode: Next 20% of words
+        Very Hard Mode: Next 30% of words
+        Extreme Mode: Last 30% of words (the least common words in the list)
         
         Parameters: 
             difficultyVal (Integer) : Value (1-5) corresponding to the selected difficulty
@@ -56,14 +63,20 @@ public class WordSelectionService {
         // Initialize variables for parsing and storing words
         String wordleWord = "";
         int commonCount5 = 5522; // total 5-letter words in the google books common words .txt file that are also in the Scrabble words .txt file
-        int wordsPerDiffLevel = 1104; // total 5-letter words considered for each difficulty level
+        int wordsPerDiv = 552; // 10% of the the total 5-letter words being considered
+        HashMap<Integer, Integer> nextDifficultyMultiples = new HashMap<Integer, Integer>(5); // Maps the difficulty values to a multiple that bounds the range of words considered 
+        nextDifficultyMultiples.put(0, 1); // First 10% of words for easy mode
+        nextDifficultyMultiples.put(1, 2); // Next 10% of words for medium mode
+        nextDifficultyMultiples.put(2, 4); // Next 20% of words for hard mode
+        nextDifficultyMultiples.put(4, 7); // Next 30% of words for very hard mod
+        nextDifficultyMultiples.put(7, 10); // Next 30% of words for extreme mode
         if (validWords[0]==null) { // Only populates list of 5-letter Scrabble words if it has not already been populated
             getValidWords(); // Gets list of valid 5-letter Scrabble words
         }
         try {
             BufferedReader commonWordsBR = new BufferedReader(new FileReader(commonWordsFile));
             String str = "";
-            int wordPos = ThreadLocalRandom.current().nextInt(wordsPerDiffLevel*(difficultyVal-1), wordsPerDiffLevel*difficultyVal); // Finds the position of the target word among all 5-letter words sorted based on frequency of use
+            int wordPos = ThreadLocalRandom.current().nextInt(wordsPerDiv*difficultyVal, wordsPerDiv*nextDifficultyMultiples.get(difficultyVal)); // Finds the position of the target word among all 5-letter words sorted based on frequency of use
             int cWordCount = 0;
             
             try {
@@ -75,7 +88,7 @@ public class WordSelectionService {
                         String candidateWord = str.substring(0,5);
                         if (Arrays.asList(validWords).contains(candidateWord)) { // Verifies the word is valid based off the 2019 Scrabble word list
                             if (cWordCount == wordPos) { // Checks if the word is at the correct position in the list of 5-letter words sorted based on frequency of use
-                                wordleWord = candidateWord.toLowerCase(); 
+                                wordleWord = candidateWord; 
                                 break;
                             }
                             cWordCount += 1;
@@ -134,6 +147,6 @@ public class WordSelectionService {
         /*
         Verifies that the guess is a valid word using the 2019 Scrabble word list
         */
-        return Arrays.asList(validWords).contains(guess.toUpperCase());
+        return Arrays.asList(validWords).contains(guess);
     }
 }
