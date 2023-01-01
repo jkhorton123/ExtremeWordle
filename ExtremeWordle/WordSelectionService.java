@@ -38,7 +38,7 @@ public class WordSelectionService {
     public String chooseWord(int difficultyVal) {
         /*
         Chooses the hidden word based on the difficulty level selected by the user. The word is selected from a .txt file containing 
-        English words sorted based on the number of times they occur in a large database of books. Each of the 5 difficulty levels chooses from 
+        English words sorted based on the number of times they occur in a large English corpus (see README). Each of the 5 difficulty levels chooses from 
         20% of the words, with the most common 20% selected for easy mode and the rarest 20% selected for extreme mode.
         
         Parameters: 
