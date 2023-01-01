@@ -11,7 +11,7 @@ class gui {
     private static String targetWord;
     private static ArrayList<String> guesses = new ArrayList<String>();
     private static final int frameWidth = 500;
-    private static final int frameHeight = 300;
+    private static final int frameHeight = 400;
     private static JFrame frame;
     private static JPanel dPanel; // Panel containing the difficulty selection UI
     private static JPanel wPanel; // Panel containing the word selection UI
@@ -63,10 +63,10 @@ class gui {
 
         // Adding Welcome and Instruction Labels
         Label welcomeL = new Label("Welcome to Extreme Wordle!");
-        Label instructionL = new Label("Please select the difficulty level from the options below:");
-
+        Label instructionL1 = new Label("Please select the difficulty level from the options below:");
+        Label instructionL2 = new Label("<html>Difficulty corresponds to the commonness of the Wordle answer within a large dataset of books</html>");
         difficultyPanel.add(welcomeL);
-        difficultyPanel.add(instructionL);
+        difficultyPanel.add(instructionL1);
 
         // Adding difficulty buttons
         JButton easyB = new JButton("Easy");
@@ -150,6 +150,7 @@ class gui {
         difficultyPanel.add(hardB); 
         difficultyPanel.add(vHardB); 
         difficultyPanel.add(extremeB); 
+        difficultyPanel.add(instructionL2);
         return difficultyPanel;
     }
     public static JPanel createWordSelectionPanel() {
