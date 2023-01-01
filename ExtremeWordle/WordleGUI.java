@@ -75,19 +75,19 @@ class gui {
         JButton vHardB = new JButton("Very Hard");
         JButton extremeB = new JButton("Extreme");
 
-        // Mapping the difficulty values to integer multipliers that will be used for selecting words from the word list sorted by frequency
-        HashMap<String, Integer> difficultyValues = new HashMap<String, Integer>(5);
-        difficultyValues.put("Easy", 1);
-        difficultyValues.put("Medium", 2);
-        difficultyValues.put("Hard", 3);
-        difficultyValues.put("Very Hard", 4);
-        difficultyValues.put("Extreme", 5);
+        // Mapping the difficulty strings to integer multipliers that will be used for selecting words from the word list sorted by frequency
+        HashMap<String, Integer> difficultyMultiples= new HashMap<String, Integer>(5);
+        difficultyMultiples.put("Easy", 0);
+        difficultyMultiples.put("Medium", 1);
+        difficultyMultiples.put("Hard", 2);
+        difficultyMultiples.put("Very Hard", 4);
+        difficultyMultiples.put("Extreme", 7);
 
         wordSelectionService = new WordSelectionService();
         easyB.addActionListener(new ActionListener(){
             // The following methods obtain the target word based on the selected difficulty, reset the word selection screen, and switch the content pane to the word selection screen
             public void actionPerformed(ActionEvent e) {
-                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Easy"));
+                targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Easy"));
                 if(textFieldsCreated){
                     resetTextFields();
                 }
@@ -99,7 +99,7 @@ class gui {
         });
         mediumB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Medium"));
+                targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Medium"));
                 if(textFieldsCreated){
                     resetTextFields();
                 }
@@ -114,7 +114,7 @@ class gui {
                 if(textFieldsCreated){
                     resetTextFields();
                 }
-                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Hard"));
+                targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Hard"));
                 frame.setContentPane(wPanel);
                 frame.setVisible(true);
                 frame.repaint();
@@ -123,7 +123,7 @@ class gui {
         });
         vHardB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Very Hard"));
+                targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Very Hard"));
                 if(textFieldsCreated){
                     resetTextFields();
                 }
@@ -135,7 +135,7 @@ class gui {
         });
         extremeB.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                targetWord = wordSelectionService.chooseWord(difficultyValues.get("Extreme"));
+                targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Extreme"));
                 if(textFieldsCreated){
                     resetTextFields();
                 }
