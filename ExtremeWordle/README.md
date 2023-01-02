@@ -9,3 +9,4 @@ Hard Mode: Next 20% of words <br />
 Very Hard Mode: Next 30% of words <br />
 Extreme Mode: Last 30% of words (the least common words in the list)
 
+Each time the user selects a new difficulty, a new word will be selected by the program which will correspond to the selected difficulty. Each selected word, as well as each guess entered by the user, will be validated against an [English word list repository](https://github.com/lorenbrichter/Words/blob/master/Words/en.txt).
