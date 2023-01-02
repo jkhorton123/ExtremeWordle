@@ -1,4 +1,4 @@
-# ExtremeWordle
+# ExtremeWordle Background
 This is a [Wordle](https://www.nytimes.com/games/wordle/index.html) variant that has various difficulty levels and was built 
 using Java 18.0.1 for the back-end and Java Swing for the front-end. Information regarding Wordle can be found [here](https://en.wikipedia.org/wiki/Wordle).
 
@@ -15,4 +15,23 @@ Hard Mode: Next 20% of words <br />
 Very Hard Mode: Next 30% of words <br />
 Extreme Mode: Last 30% of words (the least common words in the list)
 
+<<<<<<< HEAD
 Each time the user selects a new difficulty, a new word will be selected by the program which will correspond to the selected difficulty. Each selected word, as well as each guess entered by the user, will be validated against an [English word list repository](https://github.com/lorenbrichter/Words/blob/master/Words/en.txt).
+=======
+Each time the user selects a new difficulty, a new word will be selected by the program which will correspond to the selected 
+difficulty. Each selected word, as well as each guess entered by the user, will be validated against the [2019 Collins Scrabble 
+Words list](https://drive.google.com/file/d/1oGDf1wjWp5RF_X9C7HoedhIWMh5uJs8s/view).
+
+
+# Appliction Setup
+1. Ensure [Java 18.0.1](https://www.oracle.com/java/technologies/javase/jdk18-archive-downloads.html) or a compatible version is installed.
+2. Download and unzip the package "ExtremeWordle".
+3. In the file "WordleGUI.java", run the main method in an IDE of choice (Visual Studio Code is preferred).
+4. Close the pop-up java GUI window before re-running the application.
+
+
+# Application Walkthrough
+On application startup, the user is presented with a welcome screen which contains the difficulty options the user can choose from.
+
+Medium mode
+>>>>>>> 82a10ae (Update README.md)
