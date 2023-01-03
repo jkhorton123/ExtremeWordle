@@ -31,12 +31,12 @@ On application startup, the user is presented with a welcome screen which contai
 <img src="./ExtremeWordleImages/DifficultySelectionScreen.png" width="550" height="400" />
 </p>
 
-When the user selects one of the difficulty options, the following screen will appear. At any point, the user can select the "Back" button to return to the difficulty selection screen. Selecting a new difficulty (or the same difficulty) will reset the game and the wordle answer.
+When the user selects one of the difficulty options, the following screen will appear. At any point, the user can select the "Back" button to return to the difficulty selection screen. Selecting a new difficulty (or the same difficulty) will reset the game and the Wordle answer. Users can enter their guesses on this screen, where each text box will accept one letter in each 5-letter word. When the user wants to enter a word, the user should press enter. 
 <p align="center">
 <img src="./ExtremeWordleImages/WordSelectionScreen.png" width="550" height="400" />
 </p>
 
-Users can enter their guesses on this screen, where each text box will accept one letter in each 5-letter word. When the user wants to enter a word, the user should press enter. If the word is not 5 letters, has already been guessed, or is not a valid English word, the following pop-up will appear to let the user know that the word is invalid.
+If the entered word is not 5 letters, has already been guessed, or is not a valid English word, the following pop-up will appear to let the user know that the word is invalid.
 <p align="center">
 <img src="./ExtremeWordleImages/InvalidWord.png" width="250" height="150" />
 </p>
@@ -52,7 +52,7 @@ The following is an image of a user playing on medium mode where the Wordle answ
 <img src="./ExtremeWordleImages/Guesses.png" width="550" height="400" />
 </p>
 
-If the guess is accepted and it is the same as the Wordle answer, then a pop-up saying "You Win" will appear. This is illustrated in the image below which uses the same example where the answer is "DRAFT".
+If the guess is accepted and it is the same as the Wordle answer, then a pop-up containing "You won!" will appear. This is illustrated in the image below which uses the same example where the answer is "DRAFT".
 <p align="center">
 <img src="./ExtremeWordleImages/Win.png" width="550" height="400" />
 </p>
@@ -62,7 +62,7 @@ However, if the user guesses six 5-letter words without guessing the Wordle answ
 <img src="./ExtremeWordleImages/Loss.png" width="750" height="400" />
 </p>
 
-The extreme mode is the hardest difficulty, and chooses the Wordle answer from some of the rarest words in the English dictionary. The following image shows the Wordle answer from a game in the extreme mode. The word is "ENROL", which is a less common variant of enroll. As this shows, the words chosen for the harder difficulties can be very difficult to guess.
+The extreme mode is the hardest difficulty, and chooses the Wordle answer from some of the rarest words in the English language. The following image shows the Wordle answer from a game in the extreme mode. The word is "ENROL", which is a less common variant of enroll. As this shows, the words chosen for the harder difficulties can be very difficult to guess.
 <p align="center">
 <img src="./ExtremeWordleImages/ExtremeModeWord.png" width="400" height="250" />
 </p>
