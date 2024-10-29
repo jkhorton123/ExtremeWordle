@@ -20,10 +20,12 @@ class gui {
     private static JTextField[] textFields;
     private static WordSelectionService wordSelectionService;
     private static boolean textFieldsCreated = false;
-    public static void createGui() { 
+
+    public static void createGui() {
         /*
-        Creates the JFrame and calls methods to create the JPanels that will be used for the UI
-        */
+         * Creates the JFrame and calls methods to create the JPanels that will be used
+         * for the UI
+         */
         frame = new JFrame("Extreme Wordle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameWidth, frameHeight);
@@ -46,25 +48,27 @@ class gui {
         wLayout.add(wordSelectionPanel);
         wPanel.add(wLayout, BorderLayout.CENTER);
         frame.add(wPanel);
-        
+
         frame.setContentPane(dPanel); // The application will show the difficulty selection screen initially
         frame.setVisible(true);
     }
 
     public static JPanel createDifficultyPanel() {
         /*
-        Creates the difficulty selection screen UI
-
-        Returns:
-            difficultyPanel (JPanel) : Panel which contains the difficulty selection screen UI
-        */
+         * Creates the difficulty selection screen UI
+         * 
+         * Returns:
+         * difficultyPanel (JPanel) : Panel which contains the difficulty selection
+         * screen UI
+         */
         JPanel difficultyPanel = new JPanel(new GridLayout(10, 1, 10, 5));
         difficultyPanel.setSize(frameWidth, frameHeight);
 
         // Adding Welcome and Instruction Labels
         Label welcomeL = new Label("Welcome to Extreme Wordle!");
         Label instructionL1 = new Label("Please select the difficulty level from the options below:");
-        Label instructionL2 = new Label("<html>Difficulty corresponds to the commonness of the Wordle answer within a large dataset of books</html>");
+        Label instructionL2 = new Label(
+                "<html>Difficulty corresponds to the commonness of the Wordle answer within a large dataset of books</html>");
         difficultyPanel.add(welcomeL);
         difficultyPanel.add(instructionL1);
 
@@ -75,8 +79,9 @@ class gui {
         JButton vHardB = new JButton("Very Hard");
         JButton extremeB = new JButton("Extreme");
 
-        // Mapping the difficulty strings to integer multipliers that will be used for selecting words from the word list sorted by frequency
-        HashMap<String, Integer> difficultyMultiples= new HashMap<String, Integer>(5);
+        // Mapping the difficulty strings to integer multipliers that will be used for
+        // selecting words from the word list sorted by frequency
+        HashMap<String, Integer> difficultyMultiples = new HashMap<String, Integer>(5);
         difficultyMultiples.put("Easy", 0);
         difficultyMultiples.put("Medium", 1);
         difficultyMultiples.put("Hard", 2);
@@ -84,11 +89,13 @@ class gui {
         difficultyMultiples.put("Extreme", 7);
 
         wordSelectionService = new WordSelectionService();
-        easyB.addActionListener(new ActionListener(){
-            // The following methods obtain the target word based on the selected difficulty, reset the word selection screen, and switch the content pane to the word selection screen
+        easyB.addActionListener(new ActionListener() {
+            // The following methods obtain the target word based on the selected
+            // difficulty, reset the word selection screen, and switch the content pane to
+            // the word selection screen
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Easy"));
-                if(textFieldsCreated){
+                if (textFieldsCreated) {
                     resetTextFields();
                 }
                 frame.setContentPane(wPanel);
@@ -97,10 +104,10 @@ class gui {
                 frame.revalidate();
             }
         });
-        mediumB.addActionListener(new ActionListener(){
+        mediumB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Medium"));
-                if(textFieldsCreated){
+                if (textFieldsCreated) {
                     resetTextFields();
                 }
                 frame.setContentPane(wPanel);
@@ -109,9 +116,9 @@ class gui {
                 frame.revalidate();
             }
         });
-        hardB.addActionListener(new ActionListener(){
+        hardB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(textFieldsCreated){
+                if (textFieldsCreated) {
                     resetTextFields();
                 }
                 targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Hard"));
@@ -121,10 +128,10 @@ class gui {
                 frame.revalidate();
             }
         });
-        vHardB.addActionListener(new ActionListener(){
+        vHardB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Very Hard"));
-                if(textFieldsCreated){
+                if (textFieldsCreated) {
                     resetTextFields();
                 }
                 frame.setContentPane(wPanel);
@@ -133,10 +140,10 @@ class gui {
                 frame.revalidate();
             }
         });
-        extremeB.addActionListener(new ActionListener(){
+        extremeB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 targetWord = wordSelectionService.chooseWord(difficultyMultiples.get("Extreme"));
-                if(textFieldsCreated){
+                if (textFieldsCreated) {
                     resetTextFields();
                 }
                 frame.setContentPane(wPanel);
@@ -145,27 +152,30 @@ class gui {
                 frame.revalidate();
             }
         });
-        difficultyPanel.add(easyB); 
-        difficultyPanel.add(mediumB); 
-        difficultyPanel.add(hardB); 
-        difficultyPanel.add(vHardB); 
-        difficultyPanel.add(extremeB); 
+        difficultyPanel.add(easyB);
+        difficultyPanel.add(mediumB);
+        difficultyPanel.add(hardB);
+        difficultyPanel.add(vHardB);
+        difficultyPanel.add(extremeB);
         difficultyPanel.add(instructionL2);
         return difficultyPanel;
     }
+
     public static JPanel createWordSelectionPanel() {
         /*
-        Creates the word selection screen UI
-        
-        Returns:
-            wordSelectionPanel (JPanel) : Panel which contains the word selection screen UI
-        */
-        JPanel wordSelectionPanel = new JPanel(); // Outer panel which will encompass the back button and the inputFieldsPanel
+         * Creates the word selection screen UI
+         * 
+         * Returns:
+         * wordSelectionPanel (JPanel) : Panel which contains the word selection screen
+         * UI
+         */
+        JPanel wordSelectionPanel = new JPanel(); // Outer panel which will encompass the back button and the
+                                                  // inputFieldsPanel
         wordSelectionPanel.setSize(frameWidth, frameHeight);
-        
+
         // Adding the back button
         JButton backB = new JButton("Back");
-        backB.addActionListener(new ActionListener(){
+        backB.addActionListener(new ActionListener() {
             // Back button will switch to the difficulty selection screen
             public void actionPerformed(ActionEvent e) {
                 frame.setContentPane(dPanel);
@@ -174,104 +184,121 @@ class gui {
                 frame.revalidate();
             }
         });
-        GridBagConstraints gbc = new GridBagConstraints();            
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.insets = new Insets(16, 16, 16, 16);
         gbc.anchor = GridBagConstraints.NORTHWEST;
         wordSelectionPanel.add(backB, gbc);
-     
+
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.fill = gbc.BOTH;
         gbc.insets = new Insets(24, 40, 40, 40);
-        JPanel inputFieldsPanel = new JPanel(new GridLayout(6, 5, 10, 2)); // Inner panel which will contain the text fields
+        JPanel inputFieldsPanel = new JPanel(new GridLayout(6, 5, 10, 2)); // Inner panel which will contain the text
+                                                                           // fields
         textFields = new JTextField[30];
-        for(int i=0; i<30; i++) {
+        for (int i = 0; i < 30; i++) {
             JTextField letField = new JTextField(1);
-            ((AbstractDocument)letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1)); // Sets the filter for text inputs
-            if(i>lastActive) {
+            ((AbstractDocument) letField.getDocument()).setDocumentFilter(new LimitDocumentFilter(1)); // Sets the
+                                                                                                       // filter for
+                                                                                                       // text inputs
+            if (i > lastActive) {
                 letField.setEnabled(false); // Disables all text fields that are below the current row
             }
             letField.addActionListener(new java.awt.event.ActionListener() {
-                // Triggered when the user selects enter in a text box, this method validates the entered word in the row and updates the UI accordingly
+                // Triggered when the user selects enter in a text box, this method validates
+                // the entered word in the row and updates the UI accordingly
                 public void actionPerformed(ActionEvent event) {
                     String guess = "";
-                    for(int i=firstActive; i<=lastActive; i++) { // Builds the word from the five text fields in the row
+                    for (int i = firstActive; i <= lastActive; i++) { // Builds the word from the five text fields in
+                                                                      // the row
                         String let = textFields[i].getText();
-                        guess = guess + let; 
+                        guess = guess + let;
                     }
 
-                    if((guess.length()==5) && !(guesses.contains(guess)) && wordSelectionService.validateWord(guess)) { // If 5 letters were inputted, the word has not already been guessed, and it is a valid word
+                    if ((guess.length() == 5) && !(guesses.contains(guess))
+                            && wordSelectionService.validateWord(guess.toLowerCase())) { // If 5 letters were inputted,
+                                                                                         // the word has not already
+                                                                                         // been guessed, and it is a
+                                                                                         // valid word
                         guesses.add(guess);
-                        Color[] letterColors = wordSelectionService.getLetterColors(guess, targetWord); // Obtains color mappings for the letters in the selected word 
+                        Color[] letterColors = wordSelectionService.getLetterColors(guess, targetWord); // Obtains color
+                                                                                                        // mappings for
+                                                                                                        // the letters
+                                                                                                        // in the
+                                                                                                        // selected word
                         int c = 0;
-                        for(int i=firstActive; i<=lastActive; i++) {
-                            // Sets the text fields to the respective color and disables the text fields in the finished row
+                        for (int i = firstActive; i <= lastActive; i++) {
+                            // Sets the text fields to the respective color and disables the text fields in
+                            // the finished row
                             textFields[i].setBackground(letterColors[c]);
                             textFields[i].setEnabled(false);
                             c += 1;
                         }
-                        if(guess.equals(targetWord)) {
-                            JOptionPane.showMessageDialog(frame, "You won!"); // Produced if the user enters the target word
-                        }
-                        else if(guesses.size() == 6) { 
-                            JOptionPane.showMessageDialog(frame, "Game Over. The word was " + targetWord + "."); // Produced if the user has used all 6 guesses without guessing the target word
-                        }
-                        else { 
+                        if (guess.equals(targetWord)) {
+                            JOptionPane.showMessageDialog(frame, "You won!"); // Produced if the user enters the target
+                                                                              // word
+                        } else if (guesses.size() == 6) {
+                            JOptionPane.showMessageDialog(frame, "Game Over. The word was " + targetWord + "."); // Produced
+                                                                                                                 // if
+                                                                                                                 // the
+                                                                                                                 // user
+                                                                                                                 // has
+                                                                                                                 // used
+                                                                                                                 // all
+                                                                                                                 // 6
+                                                                                                                 // guesses
+                                                                                                                 // without
+                                                                                                                 // guessing
+                                                                                                                 // the
+                                                                                                                 // target
+                                                                                                                 // word
+                        } else {
                             firstActive += 5;
                             lastActive += 5;
-                            if(lastActive<=29) {
-                                for(int i=firstActive; i<=lastActive; i++) {
+                            if (lastActive <= 29) {
+                                for (int i = firstActive; i <= lastActive; i++) {
                                     textFields[i].setEnabled(true); // Enables the text fields in the next row down
                                 }
                             }
                         }
-                    }
-                    else {
+                    } else {
                         JOptionPane.showMessageDialog(frame, "Invalid Word");
                     }
                 }
-              });
+            });
             inputFieldsPanel.add(letField);
             textFields[i] = letField;
         }
         textFieldsCreated = true;
         wordSelectionPanel.add(inputFieldsPanel, gbc);
         return wordSelectionPanel;
-        
+
     }
+
     public static void resetTextFields() {
         /*
-        Resets the text fields and associated variables for the word selection screen
-        */
-        for(int i=firstActive; i<lastActive+1;i++) { // Disables the currently editable row of text fields
-            textFields[i].setEnabled(false); 
+         * Resets the text fields and associated variables for the word selection screen
+         */
+        for (int i = firstActive; i < lastActive + 1; i++) { // Disables the currently editable row of text fields
+            textFields[i].setEnabled(false);
         }
         firstActive = 0;
         lastActive = 4;
         guesses = new ArrayList<String>();
-        for(int i=0; i<30; i++) {
+        for (int i = 0; i < 30; i++) {
             textFields[i].setText("");
             textFields[i].setBackground(Color.WHITE);
         }
-        for(int i=firstActive; i<lastActive+1;i++) { // Enables the first row of text fields
-            textFields[i].setEnabled(true); 
+        for (int i = firstActive; i < lastActive + 1; i++) { // Enables the first row of text fields
+            textFields[i].setEnabled(true);
         }
     }
-    public static void main(String args[]){
+
+    public static void main(String args[]) {
         createGui();
     }
 
 }
-
-
-
-
-
-    
-
-
-
-
